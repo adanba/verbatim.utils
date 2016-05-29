@@ -21,7 +21,43 @@ lemmatisation  <- function(txt, lang="en") {
   lang <- match.arg(tolower(lang), c("en", "fr"))
 
   library(magrittr)
+
   ## Need Freeling to be installed
 
+
+  ## Nom de fichier source
+  txt_in_name <- tempfile()
+
+  ## Le fichier source
+  txt_in<-file(txt_in_name,encoding="UTF-8")
+  writeLines(txt,txt_in)
+  close(txt_in)
+
+  ## Nom de fichier en sortie
+  txt_out_name <- tempfile()
+
+  ## Le fichier en sortie
+  txt_out<-file(txt_out_name,encoding="UTF-8")
+
+
+
+  ## Check the OS type: Car l'appel de freeling diffère selon les OS
+  if(.Platform$OS.type == "unix") {
+    ## Écriture de la commande
+    command <- paste0("analyze -f ",lang,".cfg <",txt_in_name," >",txt_out_name)
+    ## Exécution de la commande
+    res <- system(command)
+  } else {
+
+  }
+
+  ## S'il y a eu un problème on renvoi NULL
+  if(res!=0) return(NULL)
+
+  ## On lit le fichier en sortie
+  out <- readLines(testtxt_out_name,encoding="UTF-8")
+
+  ## On regarde le résultat
+  return(out)
 
 }
